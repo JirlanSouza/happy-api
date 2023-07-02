@@ -1,9 +1,6 @@
 package com.dev.happyapi.orphanage.data.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,6 +25,7 @@ public class Orphanage {
     private Float longitude;
     private String openingHours;
     private boolean openingOnWeekends;
-    @OneToMany
+
+    @OneToMany(mappedBy = "orphanageId", cascade = CascadeType.ALL)
     private List<OrphanageImage> images;
 }
