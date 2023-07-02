@@ -7,7 +7,7 @@ import com.dev.happyapi.orphanage.dtos.CreateOrphanageDto;
 import com.dev.happyapi.orphanage.exceptions.ExistsEntityException;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,5 +47,9 @@ public class OrphanageServices {
         );
 
         return  repository.save(orphanage);
+    }
+
+    public List<Orphanage> listOrphanages() {
+        return repository.findAll();
     }
 }
