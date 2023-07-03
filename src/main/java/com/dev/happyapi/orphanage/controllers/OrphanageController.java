@@ -7,9 +7,11 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/orphanages")
-@ResponseStatus(HttpStatus.CREATED)
 public class OrphanageController {
     private final OrphanageServices orphanageServices;
 
@@ -18,8 +20,14 @@ public class OrphanageController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     OrphanageViewData create(@RequestBody @Valid CreateOrphanageDto orphanageDto) {
         var orphanage = orphanageServices.createOrphanage(orphanageDto);
         return OrphanageViewData.of(orphanage);
+    }
+
+    @GetMapping
+    List<OrphanageViewData> list() {
+        return orphanageServices.listOrphanages().stream().map(OrphanageViewData::of).collect(Collectors.toList());
     }
 }

@@ -7,7 +7,8 @@ import com.dev.happyapi.orphanage.dtos.CreateOrphanageDto;
 import com.dev.happyapi.orphanage.exceptions.ExistsEntityException;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,8 +27,9 @@ public class OrphanageServices {
             );
         }
 
+        var orphanageId = UUID.randomUUID();
         var orphanage = new Orphanage(
-                UUID.randomUUID(),
+                orphanageId,
                 orphanageData.name(),
                 orphanageData.about(),
                 orphanageData.latitude(),
@@ -37,6 +39,7 @@ public class OrphanageServices {
                 orphanageData.images().stream().map(
                     i -> new OrphanageImage(
                         UUID.randomUUID(),
+                        orphanageId,
                         i.name(),
                         i.size(),
                         i.mimeType(),
