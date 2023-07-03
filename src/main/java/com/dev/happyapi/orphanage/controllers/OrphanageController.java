@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -29,5 +30,11 @@ public class OrphanageController {
     @GetMapping
     List<OrphanageViewData> list() {
         return orphanageServices.listOrphanages().stream().map(OrphanageViewData::of).collect(Collectors.toList());
+    }
+
+    @GetMapping("{id}")
+    OrphanageViewData get(@PathVariable UUID id) {
+        var orphanage = orphanageServices.getOrphanage(id);
+        return OrphanageViewData.of(orphanage);
     }
 }

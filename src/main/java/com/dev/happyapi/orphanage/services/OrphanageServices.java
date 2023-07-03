@@ -5,6 +5,7 @@ import com.dev.happyapi.orphanage.data.models.OrphanageImage;
 import com.dev.happyapi.orphanage.data.repositories.OrphanagesRepository;
 import com.dev.happyapi.orphanage.dtos.CreateOrphanageDto;
 import com.dev.happyapi.orphanage.exceptions.ExistsEntityException;
+import com.dev.happyapi.orphanage.exceptions.NotFoundEntityException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,5 +55,11 @@ public class OrphanageServices {
 
     public List<Orphanage> listOrphanages() {
         return repository.findAll();
+    }
+
+    public Orphanage getOrphanage(UUID orphanageId) {
+        return repository.findById(orphanageId).orElseThrow(
+                () -> new NotFoundEntityException("The orphanage with id '%s' do not found")
+        );
     }
 }
