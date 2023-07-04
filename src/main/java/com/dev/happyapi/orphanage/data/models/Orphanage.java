@@ -21,10 +21,11 @@ public class Orphanage {
     private UUID id;
     private String name;
     private String about;
+    private String instructions;
     private Float latitude;
     private Float longitude;
     private String openingHours;
-    private boolean openingOnWeekends;
+    private boolean openOnWeekends;
 
     @OneToMany(mappedBy = "orphanageId", cascade = CascadeType.ALL)
     private List<OrphanageImage> images;

@@ -1,6 +1,7 @@
 package com.dev.happyapi.orphanage.presentations;
 
 import com.dev.happyapi.orphanage.data.models.Orphanage;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +14,9 @@ public record OrphanageViewData(
         Float latitude,
         Float longitude,
         String openingHours,
-        boolean openingOnWeekends,
+
+        @JsonProperty(value = "open_on_weekends")
+        boolean openOnWeekends,
         List<OrphanageImageViewData> images
 ) {
     public static OrphanageViewData of(Orphanage orphanage) {
@@ -24,7 +27,7 @@ public record OrphanageViewData(
             orphanage.getLatitude(),
             orphanage.getLongitude(),
             orphanage.getOpeningHours(),
-            orphanage.isOpeningOnWeekends(),
+            orphanage.isOpenOnWeekends(),
             orphanage.getImages().stream().map(OrphanageImageViewData::of).collect(Collectors.toList())
         );
     }

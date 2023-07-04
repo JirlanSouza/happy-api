@@ -1,0 +1,1 @@
+alter table orphanages rename column opening_on_weekends to open_on_weekends;

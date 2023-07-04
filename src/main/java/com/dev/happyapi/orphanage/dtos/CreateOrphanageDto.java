@@ -1,6 +1,6 @@
 package com.dev.happyapi.orphanage.dtos;
 
-import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -13,6 +13,9 @@ public record CreateOrphanageDto(
     @Size(max = 500)
     String about,
 
+    @Size(max = 200)
+    String instructions,
+
     @NotNull
     Float latitude,
 
@@ -21,7 +24,9 @@ public record CreateOrphanageDto(
 
     @NotNull
     String openingHours,
-    boolean openingOnWeekends,
+
+    @JsonProperty(value = "open_on_weekends")
+    boolean openOnWeekends,
 
     @NotNull
     List<CreateOrphanageImageDto> images

@@ -33,10 +33,11 @@ public class OrphanageServices {
                 orphanageId,
                 orphanageData.name(),
                 orphanageData.about(),
+                orphanageData.instructions(),
                 orphanageData.latitude(),
                 orphanageData.longitude(),
                 orphanageData.openingHours(),
-                orphanageData.openingOnWeekends(),
+                orphanageData.openOnWeekends(),
                 orphanageData.images().stream().map(
                     i -> new OrphanageImage(
                         UUID.randomUUID(),
