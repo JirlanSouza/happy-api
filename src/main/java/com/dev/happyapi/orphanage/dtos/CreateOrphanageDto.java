@@ -1,35 +1,34 @@
 package com.dev.happyapi.orphanage.dtos;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public record CreateOrphanageDto(
-    @Size(min = 3)
-    String name,
+        @Size(min = 3)
+        String name,
 
-    @Size(max = 500)
-    String about,
+        @Size(max = 500)
+        String about,
 
-    @Size(max = 200)
-    String instructions,
+        @Size(max = 200)
+        String instructions,
 
-    @NotNull
-    Float latitude,
+        @NotNull
+        Double latitude,
 
-    @NotNull
-    Float longitude,
+        @NotNull
+        Double longitude,
 
-    @NotNull
-    String openingHours,
+        @NotNull
+        String opening_hours,
 
-    @JsonProperty(value = "open_on_weekends")
-    boolean openOnWeekends,
+        boolean open_on_weekends,
 
-    @NotNull
-    List<CreateOrphanageImageDto> images
+        @NotNull
+        List<MultipartFile> images
 ) {
 }
 

@@ -22,8 +22,8 @@ public class Orphanage {
     private String name;
     private String about;
     private String instructions;
-    private Float latitude;
-    private Float longitude;
+    private Double latitude;
+    private Double longitude;
     private String openingHours;
     private boolean openOnWeekends;
 

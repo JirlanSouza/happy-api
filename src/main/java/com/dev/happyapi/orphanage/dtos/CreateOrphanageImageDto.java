@@ -7,11 +7,11 @@ import jakarta.validation.constraints.Size;
 public record CreateOrphanageImageDto(
     @NotBlank
     String name,
-    @Max(10 * 1024)
-    Long size,
     @NotBlank
     @Size(min = 3)
     String mimeType,
+    @Max(10 * 1024)
+    Long size,
     String url
 ) {
 

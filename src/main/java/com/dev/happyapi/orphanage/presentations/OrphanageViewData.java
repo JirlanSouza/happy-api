@@ -11,8 +11,8 @@ public record OrphanageViewData(
         UUID id,
         String name,
         String about,
-        Float latitude,
-        Float longitude,
+        Double latitude,
+        Double longitude,
         String openingHours,
 
         @JsonProperty(value = "open_on_weekends")
@@ -21,14 +21,14 @@ public record OrphanageViewData(
 ) {
     public static OrphanageViewData of(Orphanage orphanage) {
         return new OrphanageViewData(
-            orphanage.getId(),
-            orphanage.getName(),
-            orphanage.getAbout(),
-            orphanage.getLatitude(),
-            orphanage.getLongitude(),
-            orphanage.getOpeningHours(),
-            orphanage.isOpenOnWeekends(),
-            orphanage.getImages().stream().map(OrphanageImageViewData::of).collect(Collectors.toList())
+                orphanage.getId(),
+                orphanage.getName(),
+                orphanage.getAbout(),
+                orphanage.getLatitude(),
+                orphanage.getLongitude(),
+                orphanage.getOpeningHours(),
+                orphanage.isOpenOnWeekends(),
+                orphanage.getImages().stream().map(OrphanageImageViewData::of).collect(Collectors.toList())
         );
     }
 }
