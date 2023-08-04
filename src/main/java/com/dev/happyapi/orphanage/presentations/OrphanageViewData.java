@@ -13,6 +13,8 @@ public record OrphanageViewData(
         String about,
         Double latitude,
         Double longitude,
+
+        @JsonProperty(value = "opening_hours")
         String openingHours,
 
         @JsonProperty(value = "open_on_weekends")
