@@ -25,6 +25,6 @@ jobs:
           DATABASE_DB= ${{ vars.DATABASE_DB }}
           DATABASE_HOST= ${{ vars.DATABASE_HOST }}
           DATABASE_PASSWORD= ${{ secrets.DATABASE_PASSWORD }}
-          DATABASE_PORT= ${{ vars.DATBASE_PORT }}
-          DATABASE_USER_NAME= ${{ vars.DATBASE_USER_NAME }}
+          DATABASE_PORT= ${{ vars.DATABASE_PORT }}
+          DATABASE_USER_NAME= ${{ vars.DATABASE_USER_NAME }}
           GCP_STORAGE_BUCKET= ${{ vars.GCP_STORAGE_BUCKET }}
