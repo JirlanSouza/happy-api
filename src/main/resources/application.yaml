@@ -1,0 +1,31 @@
+spring:
+  profiles:
+    active: ${ACTIVE_PROFILE:default}
+  datasource:
+    url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_DB}?createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: ${DATABASE_USER_NAME}
+    password: ${DATABASE_PASSWORD}
+
+  jpa:
+    show-sql: false
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+server:
+  port: ${PORT:8080}
+  error:
+    include-stacktrace: never
+
+
+storage:
+  gcp_storage:
+    key_file: ${GCP_KEY_FILE}
+    project_id: ${GCP_PROJECT_ID}
+    bucket: ${GCP_STORAGE_BUCKET}
+
+  orphanages:
+    images:
+      folder_name: orphanage_images

@@ -37,3 +37,8 @@ build/
 
 ### Local images upload ###
 /orphanage_images/
+
+### .env files ###
+.env
+.local.env
+
