@@ -1,0 +1,30 @@
+on:
+  push:
+    branches:
+    - main
+    
+jobs:
+  deplpoy_application:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+  
+    steps:
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: ${{ secrets.GCP_KEY }}
+        service_account: ${{ secrets.GCP_SERVICE_ACOUNT }}
+  
+    - id: 'deploy'
+      uses: 'google-github-actions/deploy-appengine@v1'
+      with:
+        env_vars:
+          SPRING_PROFILES_ACTIVE=production
+          DATABASE_DB= ${{ vars.DATABASE_DB }}
+          DATABASE_HOST= ${{ vars.DATABASE_HOST }}
+          DATABASE_PASSWORD= ${{ secrets.DATABASE_PASSWORD }}
+          DATABASE_PORT= ${{ vars.DATBASE_PORT }}
+          DATABASE_USER_NAME= ${{ vars.DATBASE_USER_NAME }}
+          GCP_STORAGE_BUCKET= ${{ vars.GCP_STORAGE_BUCKET }}
