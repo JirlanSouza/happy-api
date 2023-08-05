@@ -20,6 +20,7 @@ jobs:
     - id: 'deploy'
       uses: 'google-github-actions/deploy-appengine@v1'
       with:
+        working_directory: ./src/main/appengine
         env_vars:
           SPRING_PROFILES_ACTIVE=production
           DATABASE_DB= ${{ vars.DATABASE_DB }}
