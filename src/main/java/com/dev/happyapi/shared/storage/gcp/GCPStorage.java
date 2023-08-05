@@ -3,14 +3,13 @@ package com.dev.happyapi.shared.storage.gcp;
 import com.dev.happyapi.shared.storage.FileInfo;
 import com.dev.happyapi.shared.storage.FileStorage;
 import com.dev.happyapi.shared.storage.StoreFileException;
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.BlobInfo;
-import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.*;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 
 @Primary
 @Component
@@ -27,7 +26,9 @@ public class GCPStorage implements FileStorage {
     public String storeFile(String folder, FileInfo info, InputStream stream) throws StoreFileException {
         try {
             BlobId blobId = BlobId.of(storageBucket, folder + "/" + info.name());
-            BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+            BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
+                    .setAcl(Collections.nCopies(1, Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER)))
+                    .build();
 
             Storage.BlobWriteOption blobPrecondition;
 
@@ -39,11 +40,13 @@ public class GCPStorage implements FileStorage {
                 );
             }
 
-            storage.createFrom(blobInfo, stream, blobPrecondition);
+            Blob fileBlob = storage.createFrom(blobInfo, stream, blobPrecondition);
+
+            return fileBlob.getMediaLink();
+
         } catch (IOException e) {
             throw new StoreFileException(e.getMessage());
         }
 
-        return null;
     }
 }

@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Keys ###
+/keys/
+
+### Local images upload ###
+/orphanage_images/

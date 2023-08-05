@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -23,9 +24,11 @@ public class OrphanageImageUploadService {
     public List<CreateOrphanageImageDto> saveImages(List<MultipartFile> images) {
         List<CreateOrphanageImageDto> imagesDto = new ArrayList<>();
 
+        long time = new Date().getTime();
+
         images.forEach(i -> {
             var imageFileInfo = new FileInfo(
-                    i.getOriginalFilename(),
+                    "%d-%s".formatted(time, i.getOriginalFilename()),
                     i.getSize(),
                     i.getContentType()
             );
