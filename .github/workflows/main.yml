@@ -2,9 +2,11 @@ on:
   pull_request:
     branches:
     - main
+    types: [closed]
     
 jobs:
   deplpoy_application:
+    if: ${{ github.event.pull_request.merged }}
     permissions:
       contents: 'read'
       id-token: 'write'
