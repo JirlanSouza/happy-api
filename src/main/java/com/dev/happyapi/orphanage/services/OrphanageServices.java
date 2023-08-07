@@ -7,12 +7,14 @@ import com.dev.happyapi.orphanage.dtos.CreateOrphanageDto;
 import com.dev.happyapi.orphanage.dtos.CreateOrphanageImageDto;
 import com.dev.happyapi.orphanage.exceptions.ExistsEntityException;
 import com.dev.happyapi.orphanage.exceptions.NotFoundEntityException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class OrphanageServices {
 
@@ -26,6 +28,8 @@ public class OrphanageServices {
 
     public Orphanage createOrphanage(CreateOrphanageDto orphanageData) {
         if (repository.existsByName(orphanageData.name())) {
+            log.warn("An attempt was made to create an orphanage with the name: '{}' that exists", orphanageData.name());
+
             throw new ExistsEntityException(
                     String.format("The orphanage with name '%s' already exists", orphanageData.name())
             );
@@ -55,6 +59,8 @@ public class OrphanageServices {
                 ).collect(Collectors.toList())
 
         );
+
+        log.info("Successful created the orphanage with id: {}", orphanageId);
 
         return repository.save(orphanage);
     }

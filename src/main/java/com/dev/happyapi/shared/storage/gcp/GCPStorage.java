@@ -4,6 +4,7 @@ import com.dev.happyapi.shared.storage.FileInfo;
 import com.dev.happyapi.shared.storage.FileStorage;
 import com.dev.happyapi.shared.storage.StoreFileException;
 import com.google.cloud.storage.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 
+@Slf4j
 @Primary
 @Component
 public class GCPStorage implements FileStorage {
@@ -41,10 +43,16 @@ public class GCPStorage implements FileStorage {
             }
 
             Blob fileBlob = storage.createFrom(blobInfo, stream, blobPrecondition);
+            log.info(
+                    "Successful stored file to Google Cloud Storage to bucket: {} with name: {}",
+                    blobId.getBucket(),
+                    blobId.getName()
+            );
 
             return fileBlob.getMediaLink();
 
         } catch (IOException e) {
+            log.error("Error on store file to Google Cloud Storage", e);
             throw new StoreFileException(e.getMessage());
         }
 
