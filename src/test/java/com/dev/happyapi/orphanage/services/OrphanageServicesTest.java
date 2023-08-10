@@ -3,23 +3,25 @@ package com.dev.happyapi.orphanage.services;
 import com.dev.happyapi.orphanage.data.models.Orphanage;
 import com.dev.happyapi.orphanage.data.models.OrphanageImage;
 import com.dev.happyapi.orphanage.data.repositories.OrphanagesRepository;
-import com.dev.happyapi.orphanage.dtos.CreateOrphanageDto;
+import com.dev.happyapi.orphanage.dtos.CreateOrphanageRequest;
 import com.dev.happyapi.orphanage.exceptions.ExistsEntityException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class OrphanageServicesTest {
@@ -38,8 +40,8 @@ class OrphanageServicesTest {
 
     @Test
     public void shouldThrowsExceptionOnCreateOrphanageWithExistentName() {
-        CreateOrphanageDto dto = createOrphanageDto();
-        Mockito.when(orphanagesRepository.existsByName(dto.name())).thenReturn(true);
+        CreateOrphanageRequest dto = createOrphanageDto();
+        when(orphanagesRepository.existsByName(dto.name())).thenReturn(true);
 
         assertThrows(ExistsEntityException.class, () -> services.createOrphanage(dto));
 
@@ -47,10 +49,10 @@ class OrphanageServicesTest {
 
     @Test
     public void shouldCreateAndSaveOrphanage() {
-        CreateOrphanageDto dto = createOrphanageDto();
-        Mockito.when(orphanagesRepository.existsByName(dto.name())).thenReturn(false);
+        CreateOrphanageRequest dto = createOrphanageDto();
+        when(orphanagesRepository.existsByName(dto.name())).thenReturn(false);
         Orphanage orphanage = createOrphanage(dto);
-        Mockito.when(orphanagesRepository.save(Mockito.any())).thenReturn(orphanage);
+        when(orphanagesRepository.save(any())).thenReturn(orphanage);
 
         Orphanage result = services.createOrphanage(dto);
 
@@ -59,16 +61,16 @@ class OrphanageServicesTest {
 
     @Test
     public void shouldNotCreateOrphanageImageWhenImageFileIsEmpty() {
-        CreateOrphanageDto dto = createOrphanageDto();
+        CreateOrphanageRequest dto = createOrphanageDto();
 
-        Mockito.when(imageUploadService.saveImages(Mockito.any())).thenReturn(Collections.emptyList());
+        when(imageUploadService.saveImages(any())).thenReturn(Collections.emptyList());
         services.createOrphanage(dto);
 
-        Mockito.verify(orphanagesRepository).save(Mockito.argThat(a -> a.getImages().size() == 0));
+        verify(orphanagesRepository).save(argThat(a -> a.getImages().isEmpty()));
     }
 
-    private CreateOrphanageDto createOrphanageDto() {
-        return new CreateOrphanageDto(
+    private CreateOrphanageRequest createOrphanageDto() {
+        return new CreateOrphanageRequest(
                 "Orphanage",
                 "Orphanage test",
                 "Orphanage test instruction",
@@ -80,22 +82,23 @@ class OrphanageServicesTest {
         );
     }
 
-    private Orphanage createOrphanage(CreateOrphanageDto dto) {
-        UUID id = UUID.randomUUID();
-
-        return new Orphanage(
-                id,
+    private Orphanage createOrphanage(CreateOrphanageRequest dto) {
+        Orphanage orphanage = new Orphanage(
                 dto.name(),
                 dto.about(),
                 dto.instructions(),
                 dto.latitude(),
                 dto.longitude(),
                 dto.opening_hours(),
-                dto.open_on_weekends(),
-                dto.images().stream().map(
-                        i -> createOrphanageImage(i, id)).collect(Collectors.toList()
-                )
+                dto.open_on_weekends()
         );
+
+        orphanage.addImages(dto.images().stream().map(
+                i -> createOrphanageImage(i, orphanage.getId())).toList()
+        );
+
+        return orphanage;
+
     }
 
     private OrphanageImage createOrphanageImage(MultipartFile imageFile, UUID orphanageId) {

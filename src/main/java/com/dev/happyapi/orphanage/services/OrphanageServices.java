@@ -3,15 +3,16 @@ package com.dev.happyapi.orphanage.services;
 import com.dev.happyapi.orphanage.data.models.Orphanage;
 import com.dev.happyapi.orphanage.data.models.OrphanageImage;
 import com.dev.happyapi.orphanage.data.repositories.OrphanagesRepository;
-import com.dev.happyapi.orphanage.dtos.CreateOrphanageDto;
 import com.dev.happyapi.orphanage.dtos.CreateOrphanageImageDto;
 import com.dev.happyapi.orphanage.exceptions.ExistsEntityException;
 import com.dev.happyapi.orphanage.exceptions.NotFoundEntityException;
+import com.dev.happyapi.orphanage.mappers.CreateOrphanageImageMapper;
+import com.dev.happyapi.orphanage.mappers.CreateOrphanageMapper;
+import com.dev.happyapi.orphanage.services.interfaces.CreateOrphanageDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class OrphanageServices {
@@ -31,30 +32,14 @@ public class OrphanageServices {
             );
         }
 
-        List<CreateOrphanageImageDto> orphanageImagesDto = imageUploadService.saveImages(orphanageData.imagesFiles());
+        Orphanage orphanage = CreateOrphanageMapper.toEntity(orphanageData);
 
-        var orphanageId = UUID.randomUUID();
-        var orphanage = new Orphanage(
-                orphanageId,
-                orphanageData.name(),
-                orphanageData.about(),
-                orphanageData.instructions(),
-                orphanageData.latitude(),
-                orphanageData.longitude(),
-                orphanageData.opening_hours(),
-                orphanageData.open_on_weekends(),
-                orphanageImagesDto.stream().map(
-                        i -> new OrphanageImage(
-                                UUID.randomUUID(),
-                                orphanageId,
-                                i.name(),
-                                i.size(),
-                                i.mimeType(),
-                                i.url()
-                        )
-                ).collect(Collectors.toList())
+        List<CreateOrphanageImageDto> imagesDto = imageUploadService.saveImages(orphanageData.imagesFiles());
+        List<OrphanageImage> orphanageImages = imagesDto.stream().map(
+                d -> CreateOrphanageImageMapper.toEntity(d, orphanage.getId())
+        ).toList();
 
-        );
+        orphanage.addImages(orphanageImages);
 
         return repository.save(orphanage);
     }

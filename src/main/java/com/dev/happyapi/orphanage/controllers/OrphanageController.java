@@ -1,7 +1,7 @@
 package com.dev.happyapi.orphanage.controllers;
 
 import com.dev.happyapi.orphanage.data.models.Orphanage;
-import com.dev.happyapi.orphanage.dtos.CreateOrphanageDto;
+import com.dev.happyapi.orphanage.dtos.CreateOrphanageRequest;
 import com.dev.happyapi.orphanage.presentations.OrphanageViewData;
 import com.dev.happyapi.orphanage.services.OrphanageServices;
 import jakarta.validation.Valid;
@@ -23,7 +23,7 @@ public class OrphanageController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    OrphanageViewData create(@Valid CreateOrphanageDto orphanageDto) {
+    OrphanageViewData create(@Valid CreateOrphanageRequest orphanageDto) {
         Orphanage orphanage = orphanageServices.createOrphanage(orphanageDto);
 
         return OrphanageViewData.of(orphanage);
