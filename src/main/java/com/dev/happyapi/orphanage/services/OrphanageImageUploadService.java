@@ -1,12 +1,11 @@
 package com.dev.happyapi.orphanage.services;
 
 import com.dev.happyapi.orphanage.dtos.CreateOrphanageImageDto;
+import com.dev.happyapi.orphanage.dtos.FileDto;
 import com.dev.happyapi.shared.storage.FileInfo;
 import com.dev.happyapi.shared.storage.FileStorage;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,33 +20,29 @@ public class OrphanageImageUploadService {
         this.orphanageImagesFolder = imagesStorageProperties.getOrphanageImagesFolderName();
     }
 
-    public List<CreateOrphanageImageDto> saveImages(List<MultipartFile> images) {
+    public List<CreateOrphanageImageDto> saveImages(List<FileDto> images) {
         List<CreateOrphanageImageDto> imagesDto = new ArrayList<>();
 
         long time = new Date().getTime();
 
-        images.forEach(i -> {
+        images.stream().filter(i -> i.size() > 0).forEach(i -> {
             var imageFileInfo = new FileInfo(
-                    "%d-%s".formatted(time, i.getOriginalFilename()),
-                    i.getSize(),
-                    i.getContentType()
+                    "%d-%s".formatted(time, i.name()),
+                    i.size(),
+                    i.mimeType()
             );
 
-            try {
-                String imageUrl = storage.storeFile(orphanageImagesFolder, imageFileInfo, i.getInputStream());
+            String imageUrl = storage.storeFile(orphanageImagesFolder, imageFileInfo, i.data());
 
-                imagesDto.add(
-                        new CreateOrphanageImageDto(
-                                imageFileInfo.name(),
-                                imageFileInfo.mimeType(),
-                                imageFileInfo.size(),
-                                imageUrl
-                        )
-                );
+            imagesDto.add(
+                    new CreateOrphanageImageDto(
+                            imageFileInfo.name(),
+                            imageFileInfo.mimeType(),
+                            imageFileInfo.size(),
+                            imageUrl
+                    )
+            );
 
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
         });
 
         return imagesDto;

@@ -31,7 +31,7 @@ public class OrphanageServices {
             );
         }
 
-        List<CreateOrphanageImageDto> orphanageImagesDto = imageUploadService.saveImages(orphanageData.images());
+        List<CreateOrphanageImageDto> orphanageImagesDto = imageUploadService.saveImages(orphanageData.imagesFiles());
 
         var orphanageId = UUID.randomUUID();
         var orphanage = new Orphanage(
