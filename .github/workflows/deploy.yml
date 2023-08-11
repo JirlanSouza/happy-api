@@ -1,8 +1,12 @@
+name: Deploy happy_api
+description: Actions to deploy happy_api rest application
+
 on:
   pull_request:
     branches:
     - main
-    
+
+
 jobs:
   deplpoy_application:
     permissions:
