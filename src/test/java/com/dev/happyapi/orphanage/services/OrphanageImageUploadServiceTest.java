@@ -9,13 +9,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OrphanageImageUploadServiceTest {
@@ -43,5 +43,25 @@ class OrphanageImageUploadServiceTest {
         verify(storage, never())
                 .storeFile(any(), any(), any());
         assertEquals(result.size(), 0);
+    }
+
+    @Test
+    public void shouldStoreImageFile() {
+        FileDto fileDto = new FileDto(
+                "image file",
+                "png",
+                10L,
+                new InputStream() {
+                    @Override
+                    public int read() throws IOException {
+                        return 0;
+                    }
+                }
+        );
+
+        List<CreateOrphanageImageDto> result = service.saveImages(List.of(fileDto));
+
+        verify(storage, times(1)).storeFile(any(), any(), eq(fileDto.data()));
+        assertEquals(result.size(), 1);
     }
 }
